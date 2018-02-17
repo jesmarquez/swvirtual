@@ -8,19 +8,20 @@
     // Obtener el cuerpo de la solicitud HTTP
     $bodyRequest = file_get_contents("php://input");
     //en caso de solicitar una URL con final / eliminamos esa posicion
+    /*
     foreach ($array as $key => $value) {
         if(empty($value)) {
         unset($array[$key]);
         }
-    }
+    }*/
 
     // creamos parametros
 
-    if (count($array) == 4) {
-        $id = $array[count($array)];
-        $entity = $array[count($array) - 1];
+    if (count($array) == 5) {
+        $id = $array[count($array) - 1];
+        $recurso = $array[count($array) - 2];
     } else {
-        $entity = $array[count($array)];
+        $recurso = $array[count($array) - 1];
     }
 
      // Analiza el metodo usado actualmente de los cuatro disponibles: GET, POST, PUT, DELETE
@@ -28,11 +29,12 @@
         case 'GET':
         // Si la variable Id existe, solicita al modelo el elemento especifico
         if(isset($id)) {
-            //$data = array("URI:" => $_SERVER['REQUEST_URI']);
-            $data = $array;
+            $data = array("username" => $id);
+            //$data = [];
         // Si no existe, solicita todos los elementos
         } else {
-            print_json(400, "Bad Request", $array);
+            print_json(400, "Bad Request", null);
+            break;
         }
     
         // Si la cantidad de elementos que trae el array de $data es igual a 0 entra en este condicional

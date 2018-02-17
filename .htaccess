@@ -9,8 +9,8 @@ RewriteRule ^api/([a-zA-Z]+)$ controller.php
 RewriteRule ^api/([a-zA-Z]+)/$ controller.php
 
 # Para metodo GET por Id y metodo DELETE
-RewriteRule ^api/([a-zA-Z]+)/([0-9]+)$ controller.php
-RewriteRule ^api/([a-zA-Z]+)/([0-9]+)/$ controller.php
+RewriteRule ^api/([a-zA-Z]+)/([a-zA-Z]+)$ controller.php
+RewriteRule ^api/([a-zA-Z]+)/([a-zA-Z]+)/$ controller.php
 
 # Expresiones regulares
 ## Alfanumericos | ([a-zA-Z0-9]+)
