@@ -48,117 +48,23 @@
         
         break;
         case 'POST':
-            // Acciones del Metodo POST
-            
             /* Analiza si existe la variable Id, ya que la URL solicita por POST solo puede ser de estilo
                 http://localhost/api/usuario no habria por que existir un Id ya que se esta registrando un 
-                nuevo elemento y el Id es autogenerado, si el Id no existe, entra en esta condicional */
+                nuevo elemento */
             if(!isset($id)) {
-            // Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
-            $array = json_decode($bodyRequest, true);
-        
-            // Renderiza la informacion obtenida que luego sera guardada en la Base de datos
-            $obj->data = renderizeData(array_keys($array), array_values($array));
-        
-            // Ejecuta la funcion post() que se encuentra en la clase generica
-            $data = $obj->post();
-        
-            // Si la respuesta es correcta o es igual a true entra en este condicional
-            if($data) {
-            // Si la Id generada es diferente de 0 se creo el elemento y entra aqui
-            if($obj->conn->insert_id != 0) {
-                // Se consulta la Id autogenerada para hacer un callBack
-                $data = $obj->get($obj->conn->insert_id);
-        
-                // Si la variable $data es igual a 0, significa que el elemento no ha sido creado como se suponia
-                if(count($data)==0) {
-                
-                print_json(201, false, null);
-                // Si la variable $data es diferente de 0, el elemento ha sido creado y manda la siguiente respuesta
+                // Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
+                $data = json_decode($bodyRequest, true);
+            
+                // Si la respuesta es correcta o es igual a true entra en este condicional
+                if($data) {
+                    print_json(201, "Created", $data);
+                // Si la respuesta es false, se supone que el elemento no ha sido registrado, y entra en este condicional
                 } else {
-                array_pop($data);
-                print_json(201, "Created", $data);
+                    print_json(201, false, null);
                 }
-                
-            // Si el Id generada es igual a 0, el elemento no ha sido creado y manda la siguiente respuesta
-            } else {
-                print_json(201, false, null);
-        
-            }
-            // Si la respuesta es false, se supone que el elemento no ha sido registrado, y entra en este condicional
-            } else {
-            print_json(201, false, null);
-            }
             // En tal caso de que exista la variable Id, imprimira el mensaje del que el metodo solicitado no es correcto
             } else {
-            print_json(405, "Method Not Allowed", null);
-            }
-            break;
-        case 'PUT':
-            // Acciones del Metodo PUT
-            if(isset($id)) {
-            // Consulta primeramente que en realidad exista un elemeto con el Id antes de modificar
-            $info = $obj->get($id);
-            array_pop($info);
-        
-            // Si la info recibida es diferente de 0, el elemento existe, por lo tanto procede a modificar 
-            if(count($info)!=0) {
-            $array = json_decode($bodyRequest, true);
-        
-            $obj->data = renderizeData(array_keys($array), array_values($array));
-        
-            $obj->Id = $id;
-            $data = $obj->put();
-        
-            if($data) {
-                $data = $obj->get($id);
-        
-                if(count($data)==0) {
-                print_json(200, false, null);
-                } else {
-                array_pop($data);
-                print_json(200, "OK", $data);
-                }
-        
-            } else {
-                print_json(200, false, null);
-            }
-            // Si la info recibida es igual a 0, el elemento no existe y no hay nada para modificar
-            } else {
-            print_json(404, "Not Found", null);
-            }
-            
-            } else {
-            print_json(405, "Method Not Allowed", null);
-            }
-        
-            break;
-        case 'DELETE':
-            if(isset($id)) {
-        
-            $info = $obj->get($id);
-        
-            if(count($info)==0) {
-            print_json(404, "Not Found", null);
-            } else {
-            $obj->Id = $id;
-            $data = $obj->delete();
-        
-            if($data) {
-                array_pop($info);
-                if(count($info)==0) {
-                print_json(404, "Not Found", null);
-                } else {
-                print_json(200, "OK", $info);
-                }
-                
-            } else {
-                print_json(200, false, null);
-            }
-            }
-        
-            } else {
-            print_json(405, "Method Not Allowed", null);
+                print_json(405, "Method Not Allowed", null);
             }
             break;
     
