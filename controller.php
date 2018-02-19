@@ -28,26 +28,24 @@
      // Analiza el metodo usado actualmente de los cuatro disponibles: GET, POST, PUT, DELETE
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'GET':
-        // Si la variable Id existe, solicita al modelo el elemento especifico
-        if(isset($id)) {
-            $data = getUser($id);
-            // $data = [];
-        // Si no existe, solicita todos los elementos
-        } else {
-            print_json(400, "Bad Request", null);
-            break;
-        }
-    
-        // Si la cantidad de elementos que trae el array de $data es igual a 0 entra en este condicional
-        if(count($data)==0) {
-            // Si la variable Id existe pero el array de $data no arroja resultado, significa que elemento no existe
-            print_json(404, "Not Found", null);
-        } else {
-            // Imprime la informacion solicitada
-            print_json(200, "OK", $data);
-        }
-        
-        break;
+			// Si la variable id existe se solicita info del usuario
+			if(isset($id)) {
+				$data = getUser($id);
+				switch($data['status']) {
+					case "success":
+						print_json(200, "OK", $data);
+					break;
+					case "failed":
+						print_json(404, "Not Found", $data);
+					break;
+				}
+			} else {
+				// si el id no está presente se hizo un mal request
+				print_json(400, "Bad Request", null);
+				break;
+			}
+			break;
+
         case 'POST':
             /* Analiza si existe la variable Id, ya que la URL solicita por POST solo puede ser de estilo
                 http://localhost/api/usuario no habria por que existir un Id ya que se esta registrando un 
@@ -55,10 +53,11 @@
             if(!isset($id)) {
                 // Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
                 $data = json_decode($bodyRequest, true);
-            
+				// Llamamos crear usuario
+				$respuesta = createUser($data);
                 // Si la respuesta es correcta o es igual a true entra en este condicional
                 if($data) {
-                    print_json(201, "Created", $data);
+                    print_json(201, "Created", $respuesta);
                 // Si la respuesta es false, se supone que el elemento no ha sido registrado, y entra en este condicional
                 } else {
                     print_json(201, false, null);
