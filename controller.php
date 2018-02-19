@@ -1,4 +1,5 @@
-<?php 
+<?php
+    include("conduit.php");
     // Permite la conexion desde cualquier origen
     header("Access-Control-Allow-Origin: *");
     // Permite la ejecucion de los metodos
@@ -29,8 +30,8 @@
         case 'GET':
         // Si la variable Id existe, solicita al modelo el elemento especifico
         if(isset($id)) {
-            $data = array("username" => $id);
-            //$data = [];
+            $data = getUser($id);
+            // $data = [];
         // Si no existe, solicita todos los elementos
         } else {
             print_json(400, "Bad Request", null);
