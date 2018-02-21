@@ -47,24 +47,24 @@
 			break;
 
         case 'POST':
-            /* Analiza si existe la variable Id, ya que la URL solicita por POST solo puede ser de estilo
-                http://localhost/api/usuario no habria por que existir un Id ya que se esta registrando un 
-                nuevo elemento */
+			/*  URL por POST solo puede ser de estilo http://localhost/api/usuario 
+			no habria por que existir un Id nuevo elemento */
+
             if(!isset($id)) {
                 // Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
                 $data = json_decode($bodyRequest, true);
 				// Llamamos crear usuario
-				$respuesta = createUser($data);
-                // Si la respuesta es correcta o es igual a true entra en este condicional
-                if($data) {
-                    print_json(201, "Created", $respuesta);
-                // Si la respuesta es false, se supone que el elemento no ha sido registrado, y entra en este condicional
-                } else {
-                    print_json(201, false, null);
-                }
-            // En tal caso de que exista la variable Id, imprimira el mensaje del que el metodo solicitado no es correcto
+				$response = createUser($data);
+				switch($response['status']) {
+					case "success":
+						print_json(201, "Created", $response);
+					break;
+					case "failed":
+						print_json(404, "Not Found", $response);
+					break;
+				}
             } else {
-                print_json(405, "Method Not Allowed", null);
+                print_json(400, "Bad Request", null);
             }
             break;
     
