@@ -49,23 +49,36 @@
         case 'POST':
 			/*  URL por POST solo puede ser de estilo http://localhost/api/usuario 
 			no habria por que existir un Id nuevo elemento */
+            switch($recurso) {
+                case "usuario":
+                    if(!isset($id)) {
+                        // Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
+                        $data = json_decode($bodyRequest, true);
+                        // Llamamos crear usuario
+                        $response = createUser($data);
+                        switch($response['status']) {
+                            case "success":
+                                print_json(201, "Created", $response);
+                            break;
+                            case "failed":
+                                print_json(404, "Not Found", $response);
+                            break;
+                        }
+                    } else {
+                        print_json(400, "Bad Request", null);
+                    }
+                break;
 
-            if(!isset($id)) {
-                // Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
-                $data = json_decode($bodyRequest, true);
-				// Llamamos crear usuario
-				$response = createUser($data);
-				switch($response['status']) {
-					case "success":
-						print_json(201, "Created", $response);
-					break;
-					case "failed":
-						print_json(404, "Not Found", $response);
-					break;
-				}
-            } else {
-                print_json(400, "Bad Request", null);
+                case "matricula":
+                    $response = array("course" => "100B");
+                    print_json(201, "Created", $response);
+                break;
+
+                default:
+                    print_json(404, "Not found", null);
+                break;
             }
+
             break;
     
         default:
