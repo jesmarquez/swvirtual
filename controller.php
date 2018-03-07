@@ -17,7 +17,6 @@
     }*/
 
     // creamos parametros
-
     if (count($array) == 5) {
         $id = $array[count($array) - 1];
         $recurso = $array[count($array) - 2];
@@ -25,24 +24,31 @@
         $recurso = $array[count($array) - 1];
     }
 
-     // Analiza el metodo usado actualmente de los cuatro disponibles: GET, POST, PUT, DELETE
+     // Analiza el metodo usado actualmente de los cuatro disponibles: GET, POST
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'GET':
 			// Si la variable id existe se solicita info del usuario
-			if(isset($id)) {
-				$data = getUser($id);
-				switch($data['status']) {
-					case "success":
-						print_json(200, "OK", $data);
+			switch($recurso) {
+				case "usuario":
+					if(isset($id)) {
+						$data = getUser($id);
+						switch($data['status']) {
+							case "success":
+								print_json(200, "OK", $data);
+								break;
+							case "failed":
+								print_json(404, "Not Found", $data);
+								break;
+						}
+					} else {
+						// si el id no está presente se hizo un mal request
+						print_json(400, "Bad Request", null);
+					}
 					break;
-					case "failed":
-						print_json(404, "Not Found", $data);
+				
+				default:
+					print_json(404, "Not found", null);
 					break;
-				}
-			} else {
-				// si el id no está presente se hizo un mal request
-				print_json(400, "Bad Request", null);
-				break;
 			}
 			break;
 
