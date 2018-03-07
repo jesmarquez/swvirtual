@@ -59,17 +59,24 @@
                 case "usuario":
                     if(!isset($id)) {
                         // Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
-                        $data = json_decode($bodyRequest, true);
-                        // Llamamos crear usuario
-                        $response = createUser($data);
-                        switch($response['status']) {
-                            case "success":
-                                print_json(201, "Created", $response);
-                            break;
-                            case "failed":
-                                print_json(404, "Not Found", $response);
-                            break;
-                        }
+                        $usuario = json_decode($bodyRequest, true);
+						// Validamos la presencia de todos los parametros para crear usuarios
+						if (array_key_exists('username', $usuario) && array_key_exists('password', $usuario) && array_key_exists('nombre', $usuario) && array_key_exists('apellido', $usuario) && array_key_exists('email', $usuario) && array_key_exists('auth', $usuario)) {
+							// Llamamos crear usuario
+							$response = createUser($usuario);
+							switch($response['status']) {
+								case "success":
+									print_json(201, "Created", $response);
+								break;
+								case "failed":
+									print_json(404, "Not Found", $response);
+								break;
+							}
+						}
+						else {
+							$data = array("status" => "failed", "message" => "Falta parámetros");
+							print_json(404, "Not found", $data);
+						}
                     } else {
                         print_json(400, "Bad Request", null);
                     }
@@ -84,7 +91,6 @@
                     print_json(404, "Not found", null);
                 break;
             }
-
             break;
     
         default:
