@@ -62,15 +62,22 @@
                         $usuario = json_decode($bodyRequest, true);
 						// Validamos la presencia de todos los parametros para crear usuarios
 						if (array_key_exists('username', $usuario) && array_key_exists('password', $usuario) && array_key_exists('nombre', $usuario) && array_key_exists('apellido', $usuario) && array_key_exists('email', $usuario) && array_key_exists('auth', $usuario)) {
-							// Llamamos crear usuario
-							$response = createUser($usuario);
-							switch($response['status']) {
-								case "success":
-									print_json(201, "Created", $response);
-								break;
-								case "failed":
-									print_json(404, "Not Found", $response);
-								break;
+							// verificamos existencia del usuario
+							$response = getUser($usuario['username']);
+							if ($response['status'] == 'success') {
+								$data = array("status" => "failed", "message" => "Usuario ya existe");
+								print_json(404, "Not found", $data);
+							} else {
+								// crear usuario
+								$response = createUser($usuario);
+								switch($response['status']) {
+									case "success":
+										print_json(201, "Created", $response);
+									break;
+									case "failed":
+										print_json(404, "Not Found", $response);
+									break;
+								}
 							}
 						}
 						else {
@@ -99,7 +106,6 @@
             print_json(405, "Method Not Allowed", null);
             break;
    }
-
    
     // Esta funcion imprime las respuesta en estilo JSON y establece los estatus de la cebeceras HTTP
     function print_json($status, $mensaje, $data) {
