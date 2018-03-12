@@ -90,8 +90,45 @@
                 break;
 
                 case "matricula":
-                    $response = array("course" => "100B");
-                    print_json(201, "Created", $response);
+					if(!isset($id)) {
+                        // Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
+                        $matricula = json_decode($bodyRequest, true);
+						// Validamos la presencia de todos los parametros para crear usuarios
+						if (array_key_exists('shortname', $matricula) && array_key_exists('username', $matricula) && array_key_exists('role', $matricula) && array_key_exists('timestart', $matricula) && array_key_exists('timeend', $matricula)) {
+							// verifica si el curso existe
+							$response_course = getCourse($matricula['shortname']);
+							if ($response_course['status'] == 'success') {
+								//verifica si el estudiante existe!
+								$response_user = getUser($matricula['username']);
+								if ($response_user['status'] == 'success') {
+									// si curso y usuario existen ... crear la matrícula
+									$response_enroll = createEnroll($matricula);
+									switch($response_enroll['status']) {
+										case "success":
+											print_json(201, "Created", $response);
+										break;
+										case "failed":
+											print_json(404, "Not Found", $response);
+										break;
+									}
+								} else {
+									$data = array("status" => "failed", "message" => "Usuario no existe!");
+									print_json(404, "Not found", $data);
+								}
+							} else {
+								//si curso no existe...no hay matricula
+								$data = array("status" => "failed", "message" => "Curso no existe!");
+								print_json(404, "Not found", $data);
+							}
+						}
+						else {
+							$data = array("status" => "failed", "message" => "Falta parámetros");
+							print_json(404, "Not found", $data);
+						}
+					} else {
+						print_json(400, "Bad Request", null);
+					}
+					
                 break;
 
                 default:
