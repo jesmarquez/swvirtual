@@ -5,8 +5,8 @@
 	*/
     function getUser($username) {
         $token = FALSE;
-        // $token = getenv('TOKEN_MR');
-		$token = 'B72AEE5B7615496B4657ACE146FEB';
+        $token = getenv('TOKEN_MR');
+		
         if ($token) {
             $service_url = 'https://uao-sandbox.mrooms.net/blocks/conduit/webservices/rest/user.php';
             $curl=curl_init($service_url);
