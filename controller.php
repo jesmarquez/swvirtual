@@ -137,6 +137,32 @@
             }
             break;
     
+		case 'DELETE':
+			if(!isset($id)) {
+				// Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
+				$matricula = json_decode($bodyRequest, true);
+				if (array_key_exists('shortname', $matricula) && array_key_exists('username', $matricula)) {
+					// Llamamos borrar matricula
+					$response_delete = deleteEnroll($matricula);
+					switch($response_delete['status']) {
+						case "success":
+							print_json(201, "Deleted", $response_delete);
+						break;
+						case "failed":
+							print_json(404, "Not Found", $response_delete);
+						break;
+					}
+				}
+				else {
+					$data = array("status" => "failed", "message" => "Falta parámetros");
+					print_json(404, "Not found", $data);					
+				}
+				
+			} else {
+				print_json(400, "Bad Request", null);
+			}
+			break;
+			
         default:
             // Acciones cuando el metodo no se permite
             // En caso de que el Metodo Solicitado no sea ninguno de los cuatro disponible, envia la siguiente respuesta
