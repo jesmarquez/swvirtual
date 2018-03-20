@@ -1,5 +1,6 @@
 <?php
     include("conduit.php");
+	include("log.php");
     // Permite la conexion desde cualquier origen
     header("Access-Control-Allow-Origin: *");
     // Permite la ejecucion de los metodos
@@ -23,7 +24,13 @@
     } else {
         $recurso = $array[count($array) - 1];
     }
-
+	
+	$tiempo = date('d-m-Y H:i:s');
+	$method_request = $_SERVER['REQUEST_METHOD']; 
+	$ip_remote = $_SERVER[REMOTE_ADDR];
+	$record_log = $tiempo.' '.$ip_remote.' '.$method_request.' '.$recurso.PHP_EOL;
+	save_record_to_log($record_log);
+	
      // Analiza el metodo usado actualmente de los cuatro disponibles: GET, POST
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'GET':
