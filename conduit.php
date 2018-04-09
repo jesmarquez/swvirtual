@@ -29,7 +29,7 @@
 				$user_xml = $xml_body->get_user->user;
 				$json = json_encode($user_xml);
 				$user_array = json_decode($json,TRUE);
-				$data = array("username" => $user_array['username'], "email" => $user_array['email'], "status" => "success");
+				$data = array("id" => $user_array['id'], "username" => $user_array['username'], "email" => $user_array['email'], "status" => "success");
 			} 
 			if ((string)$status == 'failed') {
 				$message = (string)$xml_body->get_user->response->message;
