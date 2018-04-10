@@ -205,28 +205,47 @@
 				break;
 		
 			case 'DELETE':
-				if(!isset($id)) {
-					// Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
-					$matricula = json_decode($bodyRequest, true);
-					if (array_key_exists('shortname', $matricula) && array_key_exists('username', $matricula)) {
-						// Llamamos borrar matricula
-						$response_delete = deleteEnroll($matricula);
-						switch($response_delete['status']) {
-							case "success":
-								print_json(201, "Deleted", $response_delete);
-							break;
-							case "failed":
-								print_json(404, "Not Found", $response_delete);
-							break;
+				switch($recurso) {
+					case "matricula":
+						// Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
+						$matricula = json_decode($bodyRequest, true);
+						if (array_key_exists('shortname', $matricula) && array_key_exists('username', $matricula)) {
+							// validamos si usuario existe
+							$response_user = getUser($matricula['username']);
+							if ($response_user['status'] == 'success') {
+								//validamos si el curso existe
+								$response_course = getCourse($matricula['shortname']);
+								if ($response_course['status'] == 'success') {
+									// borramos matricula
+									$response_delete = deleteEnroll($matricula);
+									switch($response_delete['status']) {
+										case "success":
+											print_json(201, "Deleted", $response_delete);
+										break;
+										case "failed":
+											print_json(404, "Not Found", $response_delete);
+										break;
+									}
+								} else {
+									//si curso no existe...no hay matricula
+									$data = array("status" => "failed", "message" => "Curso no existe!");
+									print_json(404, "Not found", $data);								
+								}
+							} else {
+								$data = array("status" => "failed", "message" => "Usuario no existe!");
+								print_json(404, "Not found", $data);
+							}
 						}
-					}
-					else {
-						$data = array("status" => "failed", "message" => "Falta parámetros");
-						print_json(404, "Not found", $data);					
-					}
-					
-				} else {
-					print_json(400, "Bad Request", null);
+						else {
+							$data = array("status" => "failed", "message" => "Falta parámetros");
+							print_json(404, "Not found", $data);					
+						}
+							
+						break;
+						
+					default:
+						print_json(404, "Not found", null);
+					break;
 				}
 				break;
 				
