@@ -160,16 +160,24 @@
 									//verifica si el estudiante existe!
 									$response_user = getUser($matricula['username']);
 									if ($response_user['status'] == 'success') {
-										// si curso y usuario existen ... crear la matrícula
-										$response_enroll = createEnroll($matricula);
-										switch($response_enroll['status']) {
-											case "success":
-												print_json(201, "Created", $response);
-											break;
-											case "failed":
-												print_json(404, "Not Found", $response);
-											break;
+										// si curso y usuario existen ...
+										// determinar si el usuario ya se encuentra matriculado
+										// print_json(200, "Ok", $data);
+										$response_matriculado = getUserEnrolled($response_user['id'], $matricula['shortname']);
+										if ($response_matriculado['status'] == "failed") {
+											$response_enroll = createEnroll($matricula);
+											switch($response_enroll['status']) {
+												case "success":
+													print_json(201, "Created", $response_enroll);
+												break;
+												case "failed":
+													print_json(404, "Not Found", $response_enroll);
+												break;
+											}
+										} else {
+											print_json(404, "Ya esta matriculado", $response_matriculado);
 										}
+										
 									} else {
 										$data = array("status" => "failed", "message" => "Usuario no existe!");
 										print_json(404, "Not found", $data);
