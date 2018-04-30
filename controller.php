@@ -124,7 +124,7 @@
 								// verificamos existencia del usuario
 								$response = getUser($usuario['username']);
 								if ($response['status'] == 'success') {
-									$data = array("status" => "failed", "message" => "Usuario ya existe");
+									$data = array("status" => "failed", "service" => "createuser", "message" => "Usuario ya existe");
 									print_json(404, "Not found", $data);
 								} else {
 									// crear usuario
@@ -140,7 +140,7 @@
 								}
 							}
 							else {
-								$data = array("status" => "failed", "message" => "Falta parámetros");
+								$data = array("status" => "failed", "service" => "createuser" ,"message" => "Falta parámetros");
 								print_json(404, "Not found", $data);
 							}
 						} else {
@@ -179,17 +179,17 @@
 										}
 										
 									} else {
-										$data = array("status" => "failed", "message" => "Usuario no existe!");
+										$data = array("status" => "failed", "service" => "createenroll", "message" => "Usuario no existe!");
 										print_json(404, "Not found", $data);
 									}
 								} else {
 									//si curso no existe...no hay matricula
-									$data = array("status" => "failed", "message" => "Curso no existe!");
+									$data = array("status" => "failed", "service" => "createenroll" , "message" => "Curso no existe!");
 									print_json(404, "Not found", $data);
 								}
 							}
 							else {
-								$data = array("status" => "failed", "message" => "Falta parámetros");
+								$data = array("status" => "failed", "service" => "createenroll" ,"message" => "Falta parámetros");
 								print_json(404, "Not found", $data);
 							}
 						} else {
@@ -228,11 +228,11 @@
 									}
 								} else {
 									//si curso no existe...no hay matricula
-									$data = array("status" => "failed", "message" => "Curso no existe!");
+									$data = array("status" => "failed", "service" => "deleteenroll", "message" => "Curso no existe!");
 									print_json(404, "Not found", $data);								
 								}
 							} else {
-								$data = array("status" => "failed", "message" => "Usuario no existe!");
+								$data = array("status" => "failed", "service" => "deleteenroll", "message" => "Usuario no existe!");
 								print_json(404, "Not found", $data);
 							}
 						}

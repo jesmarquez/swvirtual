@@ -8,7 +8,7 @@
         $token = getenv('TOKEN_MR');
 		
         if ($token) {
-            $service_url = 'https://uao-sandbox.mrooms.net/blocks/conduit/webservices/rest/user.php';
+            $service_url = 'https://virtual.uao.edu.co/blocks/conduit/webservices/rest/user.php';
             $curl=curl_init($service_url);
             $curl_post_data = array('token'=>$token,'method'=>'get_user', 'username'=>'guest');
             curl_setopt($curl, CURLOPT_POST, true);
@@ -33,7 +33,7 @@
 			} 
 			if ((string)$status == 'failed') {
 				$message = (string)$xml_body->get_user->response->message;
-				$data = array("status" => "failed", "message" => $message);
+				$data = array("status" => "failed", "service" => "getuser", "message" => $message);
 			}
 			
 		} else {
@@ -61,7 +61,7 @@
 		$token = FALSE;
 		$token =  getenv('TOKEN_MR');
 		if ($token) {
-			$service_url = 'https://uao-sandbox.mrooms.net/blocks/conduit/webservices/rest/user.php';
+			$service_url = 'https://virtual.uao.edu.co/blocks/conduit/webservices/rest/user.php';
 			$curl=curl_init($service_url);
 			$curl_post_data = array('token'=>$token,'method'=>'handle', 'xml'=>$xml_user_str);
 			curl_setopt($curl, CURLOPT_POST, true);
@@ -86,7 +86,7 @@
 			} else {
 				//extraemos el mensaje
 				$message = (string)$xml_response->handle->message;
-				$data = array("status" => "failed", "message" => $message);
+				$data = array("status" => "failed", "service" => "createuser", "message" => $message);
 			}
 		} 
 		else {
@@ -100,7 +100,7 @@
 		$token = FALSE;
 		$token =  getenv('TOKEN_MR');
 		if ($token) {
-			$service_url = 'https://uao-sandbox.mrooms.net/blocks/conduit/webservices/rest/course.php';
+			$service_url = 'https://virtual.uao.edu.co/blocks/conduit/webservices/rest/course.php';
 			$curl=curl_init($service_url);
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, array('token'=>$token,'method'=>'get_course', 'value'=>$shortname, 'field'=>'shortname'));
@@ -127,7 +127,7 @@
 
 			if ((string)$status == 'failed') {
 				$message = (string)$xml_body->get_course->response->message;
-				$data = array("status" => "failed", "message" => $message);
+				$data = array("status" => "failed", "service" => "getcourse", "message" => $message);
 			}
 			
 			
@@ -141,7 +141,7 @@
 	function createEnroll($matricula) {
 		include 'scheme_conduit_enroll.php';
 
-		$service_url = 'https://uao-sandbox.mrooms.net/blocks/conduit/webservices/rest/enroll.php';
+		$service_url = 'https://virtual.uao.edu.co/blocks/conduit/webservices/rest/enroll.php';
 
 		// crea un objeto simplexml y carga schema xml tipo user
 		$xml_enroll = new SimpleXMLElement($xmlstr);
@@ -183,7 +183,7 @@
 			} else {
 				//extraemos el mensaje
 				$message = (string)$xml_response->handle->message;
-				$data = array("status" => "failed", "message" => $message);
+				$data = array("status" => "failed", "service" => "createenroll", "message" => $message);
 			}
 			
 		} 
@@ -197,7 +197,7 @@
 	function deleteEnroll($matricula) {
 		include 'scheme_conduit_delete_enroll.php';
 
-		$service_url = 'https://uao-sandbox.mrooms.net/blocks/conduit/webservices/rest/enroll.php';
+		$service_url = 'https://virtual.uao.edu.co/blocks/conduit/webservices/rest/enroll.php';
 
 		// crea un objeto simplexml y carga schema xml tipo user
 		$xml_enroll = new SimpleXMLElement($xmlstr);
@@ -237,7 +237,7 @@
 			} else {
 				//extraemos el mensaje
 				$message = (string)$xml_response->handle->message;
-				$data = array("status" => "failed", "message" => $message);
+				$data = array("status" => "failed", "service" => "deleteenroll", "message" => $message);
 			}
 			
 		} 
