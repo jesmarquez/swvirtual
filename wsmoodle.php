@@ -30,15 +30,19 @@
 			die('error occured during curl exec. Additioanl info: ' . var_export($info));
 		}
 		curl_close($curl);
-
-		$response_json = json_decode($curl_response);
-		foreach($response_json as $valor) {
-			if ($valor->shortname == $shortname) {
-				$data = array("status" => "success");
-				return $data;
-			}
-		}
-		$data = array("status" => "failed");
+        
+        $response_object = json_decode($curl_response);
+        if (isset($response_object->exception)) {
+            $data = array("status" => "failed", "service" => "getUserEnrolled", "message" => $response_object->message);
+        } else {
+            foreach($response_object as $valor) {
+                if ($valor->shortname == $shortname) {
+                    $data = array("status" => "success");
+                    return $data;
+                }
+            }
+            $data = array("status" => "no-enroll");
+        }        
 		return $data;
 	}
     
@@ -112,7 +116,6 @@
         
         $response_object = json_decode($curl_response);
         if (isset($response_object->exception)) {
-            $message = (string)$xml_response->handle->message;
             $data = array("status" => "failed", "service" => "createuser", "message" => $response_object->message);
         } else {
             $data = array("status" => "success");

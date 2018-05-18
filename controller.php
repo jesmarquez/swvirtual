@@ -179,7 +179,7 @@
 										// determinar si el usuario ya se encuentra matriculado
 										// print_json(200, "Ok", $data);
 										$response_matriculado = getUserEnrolled($response_user['id'], $matricula['shortname']);
-										if ($response_matriculado['status'] == "failed") {
+										if ($response_matriculado['status'] == "no-enroll") {
 											$response_enroll = createEnroll($matricula);
 											switch($response_enroll['status']) {
 												case "success":
@@ -190,9 +190,11 @@
 												break;
 											}
 										} else {
-											print_json(404, "Ya esta matriculado", $response_matriculado);
+                                            if ($response_matriculado['status'] == "success")
+                                                print_json(404, "Ya esta matriculado", $response_matriculado);
+                                            else
+                                                print_json(500, "Failed!", $response_matriculado);
 										}
-										
 									} else {
 										$data = array("status" => "failed", "service" => "createenroll", "message" => "Usuario no existe!");
 										print_json(404, "Not found", $data);
