@@ -120,4 +120,45 @@
         
         return $data;
     }
+    
+    function getCourse($shortname) {
+        $domain='https://test2.uao.edu.co/siga';
+
+		$token='98053706d7ba2a06464113449c068fdd';
+		$function_name='core_course_get_courses_by_field';
+
+		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
+		$restformat = '&moodlewsrestformat=json';
+
+        $args['field'] = 'shortname';
+        $args['value'] = $shortname;
+
+		$url_str=http_build_query($args);
+		$curl=curl_init($service_url . $restformat);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $url_str);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/x-www-form-urlencoded"));
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+		$curl_response = curl_exec($curl);
+		if ($curl_response === false) {
+			$info = curl_getinfo($curl);
+			curl_close($curl);
+			die('error occured during curl exec. Additioanl info: ' . var_export($info));
+		}
+		curl_close($curl);         
+        
+        $response_object = json_decode($curl_response);
+
+        if (count($response_object->courses) == 0) {
+            $message = "Curso no fue encontrado";
+            $data = array("status" => "failed", "service" => "getcourse", "message" => $message);
+
+        } else {    
+			$data = array("id" => $response_object->courses[0]->id, "shortname" => $response_object->courses[0]->shortname, "idnumber" => $response_object->courses[0]->idnumber, "status" => "success");
+        }
+
+        return $data;
+    }
 ?>
