@@ -79,4 +79,45 @@
         
         return $data;
     }
+    
+    function createUser($usuario) {
+        $domain='https://test2.uao.edu.co/siga';
+
+		$token='98053706d7ba2a06464113449c068fdd';
+		$function_name='core_user_create_users';
+
+		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
+		$restformat = '&moodlewsrestformat=json';
+
+        $user = array('username'=> $usuario["username"], 'password' => $usuario["password"], 'firstname' => $usuario["nombre"], 'lastname' => $usuario["apellido"], 'email'=> $usuario["email"], 'auth' => $usuario["auth"]);
+        $list_users = array($user);
+
+        $args = array('users' => $list_users);
+
+		$url_str=http_build_query($args);
+		$curl=curl_init($service_url . $restformat);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $url_str);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/x-www-form-urlencoded"));
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+		$curl_response = curl_exec($curl);
+		if ($curl_response === false) {
+			$info = curl_getinfo($curl);
+			curl_close($curl);
+			die('error occured during curl exec. Additioanl info: ' . var_export($info));
+		}
+		curl_close($curl);        
+        
+        $response_object = json_decode($curl_response);
+        if (isset($response_object->exception)) {
+            $message = (string)$xml_response->handle->message;
+            $data = array("status" => "failed", "service" => "createuser", "message" => $response_object->message);
+        } else {
+            $data = array("status" => "success");
+        }
+        
+        return $data;
+    }
 ?>
