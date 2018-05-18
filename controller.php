@@ -1,5 +1,5 @@
 <?php
-    include("conduit.php");
+    // include("conduit.php");
 	include("wsmoodle.php");
 	include("log.php");
     // Permite la conexion desde cualquier origen

@@ -3,6 +3,7 @@
 	/*
 		Funciones para consultar a conduit
 	*/
+    /*
     function getUser($username) {
         $token = FALSE;
         $token = getenv('TOKEN_MR');
@@ -42,7 +43,8 @@
 		
 		return $data;
     }
-	
+	*/
+
 	function createUser($usuario) {
 		include 'scheme_conduit_user.php';
 
