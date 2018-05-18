@@ -5,9 +5,9 @@
 	   -----------------------------------------------------------------
 	*/
 	function getUserEnrolled($userid, $shortname) {
-		$domain='https://virtual.uao.edu.co';
+		$domain='https://test2.uao.edu.co/siga';
 
-		$token='e9f71033769b939f330fb85dd60c2172';
+		$token='98053706d7ba2a06464113449c068fdd';
 		$function_name='core_enrol_get_users_courses';
 
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
