@@ -233,11 +233,16 @@
 							// validamos si usuario existe
 							$response_user = getUser($matricula['username']);
 							if ($response_user['status'] == 'success') {
-								//validamos si el curso existe
+								// agregamos el id user
+                                $matricula['userid'] = $response_user['id'];
+                                //validamos si el curso existe
 								$response_course = getCourse($matricula['shortname']);
 								if ($response_course['status'] == 'success') {
+                                    // agregamos el id del curso
+                                    $matricula['courseid'] = $response_course['id'];
 									// borramos matricula
 									$response_delete = deleteEnroll($matricula);
+                                    
 									switch($response_delete['status']) {
 										case "success":
 											print_json(201, "Deleted", $response_delete);
