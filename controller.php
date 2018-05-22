@@ -240,21 +240,29 @@
 								if ($response_course['status'] == 'success') {
                                     // agregamos el id del curso
                                     $matricula['courseid'] = $response_course['id'];
-									// borramos matricula
-									$response_delete = deleteEnroll($matricula);
-                                    
-									switch($response_delete['status']) {
-										case "success":
-											print_json(201, "Deleted", $response_delete);
-										break;
-										case "failed":
-											print_json(404, "Not Found", $response_delete);
-										break;
-									}
+                                    //verificamos si esta matriculado 
+                                    $response_matriculado = getUserEnrolled($response_user['id'], $matricula['shortname']);
+                                    if ($response_matriculado['status'] == "enrolled") {
+                                        // borramos matricula
+                                        $response_delete = deleteEnroll($matricula);
+                                        switch($response_delete['status']) {
+                                            case "success":
+                                                print_json(201, "Deleted", $response_delete);
+                                            break;
+                                            case "failed":
+                                                print_json(404, "Not Found", $response_delete);
+                                            break;
+                                        }
+                                    } else {
+                                        if ($response_matriculado['status'] == "not-enrolled")
+                                            print_json(404, "No esta matriculado", $response_matriculado);
+                                        else
+                                            print_json(500, "Failed!", $response_matriculado);
+                                    }
 								} else {
-									//si curso no existe...no hay matricula
-									$data = array("status" => "failed", "service" => "deleteenroll", "message" => "Curso no existe!");
-									print_json(404, "Not found", $data);								
+                                    //si curso no existe...no hay matricula
+                                    $data = array("status" => "failed", "service" => "deleteenroll", "message" => "Curso no existe!");
+                                    print_json(404, "Not found", $data);								
 								}
 							} else {
 								$data = array("status" => "failed", "service" => "deleteenroll", "message" => "Usuario no existe!");
