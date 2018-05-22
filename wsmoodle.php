@@ -93,7 +93,14 @@
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
 		$restformat = '&moodlewsrestformat=json';
 
-        $user = array('username'=> $usuario["username"], 'password' => $usuario["password"], 'firstname' => $usuario["nombre"], 'lastname' => $usuario["apellido"], 'email'=> $usuario["email"], 'auth' => $usuario["auth"]);
+        $user = array('username'=> $usuario["username"],
+                        'password' => $usuario["password"],
+                        'firstname' => $usuario["nombre"],
+                        'lastname' => $usuario["apellido"],
+                        'email'=> $usuario["email"],
+                        'auth' => $usuario["auth"],
+                        'preferences' => array('0' => array('type' => 'auth_forcepasswordchange', 'value' => 1)));
+                        
         $list_users = array($user);
 
         $args = array('users' => $list_users);
