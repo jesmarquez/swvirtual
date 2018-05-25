@@ -5,9 +5,9 @@
 	   -----------------------------------------------------------------
 	*/
 	function getUserEnrolled($userid, $shortname) {
-		$domain='https://test2.uao.edu.co/siga';
+		$domain='https://siga.uao.edu.co/moodle';
 
-		$token='98053706d7ba2a06464113449c068fdd';
+		$token = getenv('TOKEN_WS');
 		$function_name='core_enrol_get_users_courses';
 
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
@@ -47,9 +47,9 @@
 	}
     
     function getUser($username) {
-        $domain='https://test2.uao.edu.co/siga';
+        $domain='https://siga.uao.edu.co/moodle';
 
-		$token='98053706d7ba2a06464113449c068fdd';
+		$token = getenv('TOKEN_WS');
 		$function_name='core_user_get_users_by_field';
 
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
@@ -85,9 +85,9 @@
     }
     
     function createUser($usuario) {
-        $domain='https://test2.uao.edu.co/siga';
+        $domain='https://siga.uao.edu.co/moodle';
 
-		$token='98053706d7ba2a06464113449c068fdd';
+		$token = getenv('TOKEN_WS');
 		$function_name='core_user_create_users';
 
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
@@ -132,9 +132,9 @@
     }
     
     function getCourse($shortname) {
-        $domain='https://test2.uao.edu.co/siga';
+        $domain='https://siga.uao.edu.co/moodle';
 
-		$token='98053706d7ba2a06464113449c068fdd';
+		$token = getenv('TOKEN_WS');
 		$function_name='core_course_get_courses_by_field';
 
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
@@ -173,9 +173,9 @@
     }
     
     function createEnroll ($matricula) {
-        $domain='https://test2.uao.edu.co/siga';
+        $domain='https://siga.uao.edu.co/moodle';
 
-		$token='98053706d7ba2a06464113449c068fdd';
+		$token = getenv('TOKEN_WS');
 		$function_name='enrol_manual_enrol_users';
 
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
@@ -219,9 +219,9 @@
     }
     
     function deleteEnroll($matricula) {
-        $domain='https://test2.uao.edu.co/siga';
+        $domain='https://siga.uao.edu.co/moodle';
 
-		$token='98053706d7ba2a06464113449c068fdd';
+		$token = getenv('TOKEN_WS');
 		$function_name='enrol_manual_unenrol_users';
 
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
