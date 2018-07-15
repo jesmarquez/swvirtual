@@ -5,7 +5,7 @@
 	   -----------------------------------------------------------------
 	*/
 	function getUserEnrolled($userid, $shortname) {
-		$domain='https://siga.uao.edu.co/moodle';
+		$domain='https://test2.uao.edu.co/siga';
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_enrol_get_users_courses';
@@ -47,7 +47,7 @@
 	}
     
     function getUser($username) {
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain='https://test2.uao.edu.co/siga';
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_user_get_users_by_field';
@@ -85,7 +85,7 @@
     }
     
     function createUser($usuario) {
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain='https://test2.uao.edu.co/siga';
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_user_create_users';
@@ -132,7 +132,7 @@
     }
     
     function getCourse($shortname) {
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain='https://test2.uao.edu.co/siga';
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_course_get_courses_by_field';
@@ -166,14 +166,14 @@
             $data = array("status" => "failed", "service" => "getcourse", "message" => $message);
 
         } else {    
-			$data = array("id" => $response_object->courses[0]->id, "shortname" => $response_object->courses[0]->shortname, "idnumber" => $response_object->courses[0]->idnumber, "status" => "success");
+			$data = array("id" => $response_object->courses[0]->id, "shortname" => $response_object->courses[0]->shortname, "idnumber" => $response_object->courses[0]->idnumber, "fullname" => $response_object->courses[0]->fullname, "status" => "success");
         }
 
         return $data;
     }
     
     function createEnroll ($matricula) {
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain='https://test2.uao.edu.co/siga';
 
 		$token = getenv('TOKEN_WS');
 		$function_name='enrol_manual_enrol_users';
@@ -219,7 +219,7 @@
     }
     
     function deleteEnroll($matricula) {
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain='https://test2.uao.edu.co/siga';
 
 		$token = getenv('TOKEN_WS');
 		$function_name='enrol_manual_unenrol_users';
@@ -262,5 +262,49 @@
         }
 
         return $data;
-    }
+	}
+	
+	function duplicarCurso($curso) {
+		// configurar acceso API
+        $domain='https://test2.uao.edu.co/siga';
+
+		$token = getenv('TOKEN_WS');
+		$function_name='core_course_duplicate_course';
+
+		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
+		$restformat = '&moodlewsrestformat=json';
+
+		// preparar argumento para el servicio
+		// $list_students = array();
+		$args = array('courseid' => (int)$curso['oldcourseid'],
+						'fullname' => $curso['newfullname'],
+						'shortname' => $curso['newshortname'],
+						'categoryid' => (int)$curso['categoryid']);
+
+		$url_str=http_build_query($args);
+		$curl=curl_init($service_url . $restformat);
+		curl_setopt($curl, CURLOPT_POST, true);
+		//var_dump($args);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $url_str);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/x-www-form-urlencoded"));
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+		$curl_response = curl_exec($curl);
+		if ($curl_response === false) {
+			$info = curl_getinfo($curl);
+			curl_close($curl);
+			die('error occured during curl exec. Additioanl info: ' . var_export($info));
+		}
+		curl_close($curl);             
+
+        $response_object = json_decode($curl_response);
+
+		if (isset($response_object->exception)) {
+            $data = array("status" => "failed", "service" => "duplicarcurso", "message" => $response_object->message);
+        } else {
+            $data = array("status" => "success", "message" => "Curso duplicado");
+        }
+		return $data;
+	}
 ?>

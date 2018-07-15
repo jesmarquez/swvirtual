@@ -218,12 +218,49 @@
 						
 					break;
 
-					default:
-						print_json(404, "Not found", null);
+					case "curso":
+						if(isset($id)) {
+							if ($id == 'duplicar') {
+								// Decodifica el cuerpo de la solicitud y lo guarda en un array de PHP
+								$newcurso = json_decode($bodyRequest, true);
+								// Validamos la presencia de todos los parametros para duplicar curso
+								if (array_key_exists('oldcourseid', $newcurso) && array_key_exists('oldshortname', $newcurso) && array_key_exists('newfullname', $newcurso) && array_key_exists('newshortname', $newcurso) && array_key_exists('categoryid', $newcurso)) {
+									// verifica si el curso existe
+									$response_course = getCourse($newcurso['oldshortname']);
+									if ($response_course['status'] == 'success') {
+										// duplicar curso
+										$response_duplicar_curso = duplicarCurso($newcurso);
+						
+										switch($response_duplicar_curso['status']) {
+											case "success":
+												print_json(201, "Created", $response_duplicar_curso);
+											break;
+											case "failed":
+												print_json(503, "Service Unavailable", $response_duplicar_curso);
+											break;
+										}
+									} else {
+										// curso no existe
+										$data = array("status" => "failed", "service" => "duplicatecourse" , "message" => "Curso no existe!");
+										print_json(404, "Not found", $data);
+									}
+								}
+								else {
+									$data = array("status" => "failed", "service" => "duplicatecourse" ,"message" => "Falta parámetros");
+									print_json(404, "Not found", $data);
+								}
+							}
+						}
+						
+						if (!isset($id)) {
+							// crear curso nuevo
+							$data = array("status" => "success", "message" => "Curso nuevo creado");
+							print_json(201, "Created", $data);
+						}
 					break;
 				}
-				break;
-		
+			    break;
+
 			case 'DELETE':
 				switch($recurso) {
 					case "matricula":
