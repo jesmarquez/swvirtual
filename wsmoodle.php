@@ -162,7 +162,7 @@
         $response_object = json_decode($curl_response);
 
         if (count($response_object->courses) == 0) {
-            $message = "Curso no fue encontrado";
+            $message = "Curso ".$shortname." no fue encontrado";
             $data = array("status" => "failed", "service" => "getcourse", "message" => $message);
 
         } else {    
