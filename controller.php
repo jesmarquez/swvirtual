@@ -254,8 +254,30 @@
 						
 						if (!isset($id)) {
 							// crear curso nuevo
-							$data = array("status" => "success", "message" => "Curso nuevo creado");
-							print_json(201, "Created", $data);
+							$newcurso = json_decode($bodyRequest, TRUE);
+							if (array_key_exists('fullname', $newcurso) && array_key_exists('shortname', $newcurso) && array_key_exists('categoryid', $newcurso)) {
+								$response_course = getCourse($newcurso['shortname']);
+								if ($response_course['status'] == 'success') {
+									// curso existe
+									$data = array("status" => "failed", "service" => "createcourse" , "message" => "Curso existe!");
+									print_json(503, "Service Unavailable", $data);
+								}
+								else {
+									$response_create_curso = createCourse($newcurso);
+									switch($response_create_curso['status']) {
+										case "success":
+											print_json(201, "Created", $response_create_curso);
+										break;
+										case "failed":
+											print_json(503, "Service Unavailable", $response_create_curso);
+										break;
+									}
+								}
+							}
+							else {
+								$data = array("status" => "failed", "service" => "createcourse" ,"message" => "Falta parámetros");
+								print_json(404, "Not found", $data);
+							}						
 						}
 					break;
 				}
