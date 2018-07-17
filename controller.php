@@ -251,7 +251,7 @@
 								}
 							}
 						}
-						
+
 						if (!isset($id)) {
 							// crear curso nuevo
 							$newcurso = json_decode($bodyRequest, TRUE);
@@ -280,6 +280,26 @@
 							}						
 						}
 					break;
+                    
+                    case "grupo":
+                        $grupo = json_decode($bodyRequest, true);
+                        
+                        if (array_key_exists('courseid', $grupo) && array_key_exists('name', $grupo) && array_key_exists('description', $grupo))  {
+							$data = createGroup($grupo);
+							switch($data['status']) {
+								case "success":
+									print_json(201, "Created", $data);
+								break;
+								case "failed":
+									print_json(503, "Service Unavailable", $data);
+								break;
+							}
+                        }
+  						else {
+							$data = array("status" => "failed", "message" => "Falta parámetros");
+							print_json(404, "Not found", $grupo);
+						}
+                    break; // case grupo
 				}
 			    break;
 
