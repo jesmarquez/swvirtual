@@ -282,24 +282,52 @@
 					break;
                     
                     case "grupo":
-                        $grupo = json_decode($bodyRequest, true);
-                        
-                        if (array_key_exists('courseid', $grupo) && array_key_exists('name', $grupo) && array_key_exists('description', $grupo))  {
-							$data = createGroup($grupo);
-							switch($data['status']) {
-								case "success":
-									print_json(201, "Created", $data);
-								break;
-								case "failed":
-									print_json(503, "Service Unavailable", $data);
-								break;
-							}
+                    
+                        if (!isset($id)) {
+                            $grupo = json_decode($bodyRequest, true);
+                            
+                            if (array_key_exists('courseid', $grupo) && array_key_exists('name', $grupo) && array_key_exists('description', $grupo))  {
+                                $data = createGroup($grupo);
+                                switch($data['status']) {
+                                    case "success":
+                                        print_json(201, "Created", $data);
+                                    break;
+                                    case "failed":
+                                        print_json(503, "Service Unavailable", $data);
+                                    break;
+                                }
+                            }
+                            else {
+                                $data = array("status" => "failed", "message" => "Falta parámetros");
+                                print_json(404, "Not found", $grupo);
+                            }
+                        } else {
+                            switch ($id) {
+                                case "add" :
+                                    $member = json_decode($bodyRequest, true);
+                                    if (array_key_exists("groupid", $member) && array_key_exists("userid", $member))  {
+                                        $data = addUserToGroup($member);
+                                        switch($data['status']) {
+                                            case "success":
+                                                print_json(201, "Created", $data);
+                                            break;
+                                            case "failed":
+                                                print_json(404, "Failed", $data);
+                                            break;
+                                        }
+                                    }
+                                    else {
+                                        $data = array("status" => "failed", "message" => "Falta parámetros");
+                                        print_json(404, "Not found", $grupo);
+                                    }
+                                break;
+                                
+                                default:
+                                    print_json(400, "Bad Request", null);
+                                break;
+                            }
                         }
-  						else {
-							$data = array("status" => "failed", "message" => "Falta parámetros");
-							print_json(404, "Not found", $grupo);
-						}
-                    break; // case grupo
+                    break; // POST case grupo
 				}
 			    break;
 

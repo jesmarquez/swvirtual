@@ -401,4 +401,54 @@
 
 		return $data;
 	}
+    
+    
+    function addUserToGroup($member) {
+        // configurar acceso API
+        $domain='https://test2.uao.edu.co/siga';
+
+		$token = getenv('TOKEN_WS');
+		$function_name='core_group_add_group_members';
+
+		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
+		$restformat = '&moodlewsrestformat=json';  
+        
+        // preparar argumento para el servicio
+        $list_members = array();
+        $member = array("groupid" => intval($member["groupid"]),  "userid" => intval($member["userid"]));
+        $list_members[] = $member;
+
+        $args = array('members' => $list_members);
+        
+		$url_str=http_build_query($args);
+		
+        // configurar curl para el request
+        $curl=curl_init($service_url . $restformat);
+		curl_setopt($curl, CURLOPT_POST, true);
+
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $url_str);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/x-www-form-urlencoded"));
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        
+		// evaluar respuesta
+        $curl_response = curl_exec($curl);
+		if ($curl_response === false) {
+			$info = curl_getinfo($curl);
+			curl_close($curl);
+			die('error occured during curl exec. Additioanl info: ' . var_export($info));
+		}
+		curl_close($curl);
+
+        $response_object = json_decode($curl_response);
+        
+        
+		if (isset($response_object->exception)) {
+            $data = array("status" => "failed", "service" => "addmembertogroup", "message" => $response_object->message);
+        } else {
+            $data = array("status" => "success", "message" => "Add ".$member["userid"]." en ".$member["groupid"]);
+		}
+
+		return $data;
+    }
 ?>
