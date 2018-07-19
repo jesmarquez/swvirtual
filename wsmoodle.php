@@ -78,7 +78,7 @@
         if (empty($response_object)) {
             $data = array("status" => "failed", "service" => "getuser", "message" => "Usuario ".$username." no fue encontrado");
         } else {
-            $data = array("status" => "success", "id" => $response_object[0]->id, "username" => $response_object[0]->username, "email" => $response_object[0]->email, "status" => "success");
+            $data = array("status" => "success", "id" => $response_object[0]->id, "username" => $response_object[0]->username, "email" => $response_object[0]->email, "firstname" => $response_object[0]->firstname, "lastname" => $response_object[0]->lastname, "status" => "success");
         }
         
         return $data;
@@ -125,7 +125,7 @@
         if (isset($response_object->exception)) {
             $data = array("status" => "failed", "service" => "createuser", "message" => $response_object->message);
         } else {
-            $data = array("status" => "success");
+            $data = array("status" => "success", "id" => $response_object[0]->id, "username" => $response_object[0]->username);
         }
         
         return $data;
@@ -181,8 +181,19 @@
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
 		$restformat = '&moodlewsrestformat=json';
 
-        $list_students = array();
-        $student = array('roleid' => 5,
+		$list_students = array();
+		switch ($matricula["role"]) {
+			case "student":
+				$roleid = 5;
+				break;
+			case "teacher":
+				$roleid = 3;
+				break;
+			case "nonteacher":
+				$roleid = 4;
+				break;
+		}
+        $student = array('roleid' => $roleid,
                 'userid' => $matricula["userid"], 
                 'courseid' => $matricula["courseid"],
                 'timestart' => strtotime($matricula["timestart"]),
@@ -362,6 +373,7 @@
         $domain='https://test2.uao.edu.co/siga';
 
 		$token = getenv('TOKEN_WS');
+        
 		$function_name='core_group_create_groups';
 
 		$service_url=$domain. '/webservice/rest/server.php' . '?wstoken=' . $token . '&wsfunction=' . $function_name;
