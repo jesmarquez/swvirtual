@@ -105,21 +105,39 @@
 						}
 						break;
                     case "curso":
-						if(isset($id)) {
-							$data = getCourse($id);
-							switch($data['status']) {
-								case "success":
-									print_json(200, "OK", $data);
-									break;
-								case "failed":
-									print_json(404, "Not Found", $data);
-									break;
-							}
+   						if(isset($id) && isset($id2)) {
+                            if ($id == "grupos") {
+                                $data = getGroups($id2);
+                                switch($data['status']) {
+                                    case "success":
+                                        print_json(200, "OK", $data);
+                                        break;
+                                    case "failed":
+                                        print_json(404, "Not Found", $data);
+                                        break;
+                                }                                
+                            } else {
+                                print_json(400, "Bad Request", null);
+                            }
 						} else {
-							// si el id no está presente se hizo un mal request
-							print_json(400, "Bad Request", null);
-						}                        
+                            if(isset($id)) {
+                                $data = getCourse($id);
+                                switch($data['status']) {
+                                    case "success":
+                                        print_json(200, "OK", $data);
+                                        break;
+                                    case "failed":
+                                        print_json(404, "Not Found", $data);
+                                        break;
+                                }
+                            } else {
+                                // si el id no está presente se hizo un mal request
+                                print_json(400, "Bad Request", null);
+                            }                        
+						}
+
                         break;
+                        
 					default:
 						print_json(404, "Not found", null);
 						break;
