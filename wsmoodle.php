@@ -408,7 +408,7 @@
 		if (isset($response_object->exception)) {
             $data = array("status" => "failed", "service" => "creategroup", "message" => $response_object->message);
         } else {
-            $data = array("status" => "success", "id" => $response_object[0]->id, "idnumber" => $response_object[0]->idnumber ,"message" => "Grupo ".$grupo["name"]." nuevo en ".$grupo["courseid"]);
+            $data = array("status" => "success", "id" => $response_object[0]->id, "name" => $response_object[0]->name, "idnumber" => $response_object[0]->idnumber ,"message" => "Grupo ".$grupo["name"]." nuevo en ".$grupo["courseid"]);
 		}
 
 		return $data;
