@@ -79,12 +79,14 @@
 							if (strlen($id) > 0 && strlen($id2) > 0) {
 								$response_user = getUser($id);
 								if ($response_user['status'] == "failed") {
+                                    $response_user['status'] = "USER_NOT_FOUND";
 									print_json(404, "Usuario no existe", $response_user);
 									break;
 								}
 								
 								$response_course = getCourse($id2);
 								if ($response_course['status'] == 'failed') {
+                                    $response_course['status'] = "COURSE_NOT_FOUND";
 									print_json(404, "Curso no existe", $response_course);
 									break;
 								} 
@@ -92,6 +94,7 @@
 								// print_json(200, "Ok", $data);
 								$response_matriculado = getUserEnrolled($response_user['id'], $id2);
 								if ($response_matriculado['status'] == "failed") {
+                                    $response_course['status'] = "USER_NOT_ENROLL";
 									print_json(404, "Usuario no esta matriculado", $response_matriculado);
 								} else {
 									print_json(200, "Matriculado!", $response_matriculado);
