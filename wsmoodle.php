@@ -1,11 +1,12 @@
 <?php
+	include("constantes.php");
 	/* -----------------------------------------------------------------
 		Solicita al webservice de moodle nativo los cursos matriculados
 		por medio del id del usuario
 	   -----------------------------------------------------------------
 	*/
 	function getUserEnrolled($userid, $shortname) {
-		$domain='https://siga.uao.edu.co/moodle';
+		$domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_enrol_get_users_courses';
@@ -47,8 +48,9 @@
 	}
     
     function getUser($username) {
-        $domain='https://siga.uao.edu.co/moodle';
-
+        // $domain=DOMAIN;
+		$domain=DOMAIN;
+		
 		$token = getenv('TOKEN_WS');
 		$function_name='core_user_get_users_by_field';
 
@@ -85,7 +87,7 @@
     }
     
     function createUser($usuario) {
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_user_create_users';
@@ -131,7 +133,7 @@
     }
     
     function getCourse($shortname) {
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_course_get_courses_by_field';
@@ -172,7 +174,7 @@
     }
     
     function createEnroll ($matricula) {
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
 		$function_name='enrol_manual_enrol_users';
@@ -229,7 +231,7 @@
     }
     
     function deleteEnroll($matricula) {
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
 		$function_name='enrol_manual_unenrol_users';
@@ -276,7 +278,7 @@
 	
 	function duplicarCurso($curso) {
 		// configurar acceso API
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_course_duplicate_course';
@@ -321,7 +323,7 @@
 
 	function createCourse($curso) {
 		// configurar acceso API
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_course_create_courses';
@@ -369,7 +371,7 @@
 
 	function createGroup($grupo) {
 		// configurar acceso API
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
         
@@ -416,7 +418,7 @@
     
     function addUserToGroup($member) {
         // configurar acceso API
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_group_add_group_members';
@@ -465,7 +467,7 @@
 	
 	function getGroups($courseid) {
         // configurar acceso API
-        $domain='https://siga.uao.edu.co/moodle';
+        $domain=DOMAIN;
 
 		$token = getenv('TOKEN_WS');
 		$function_name='core_group_get_course_groups';
