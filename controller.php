@@ -50,7 +50,9 @@
 		$tiempo = date('d-m-Y H:i:s');
 		$method_request = $_SERVER['REQUEST_METHOD']; 
 		$ip_remote = $_SERVER['REMOTE_ADDR'];
-		$record_log = $tiempo.' '.$ip_remote.' '.$method_request.' '.$recurso.' bodyrequest: '.$bodyRequest.PHP_EOL;
+		//$br = str_replace(array("\n", "\t"), $bodyRequest);
+		$br = trim($bodyRequest, "\n\r");
+		$record_log = $tiempo.' '.$ip_remote.' '.$method_request.' '.$recurso.' bodyrequest: '.$br.PHP_EOL;
 		save_record_to_log($record_log);
 		
 		 // Analiza el metodo usado actualmente de los cuatro disponibles: GET, POST
