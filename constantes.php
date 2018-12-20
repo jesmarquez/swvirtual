@@ -1,3 +1,3 @@
 <?php
-	define("DOMAIN", "http://cittest.uao.edu.co/moodledev");
+	define("DOMAIN", "https://campus.uaovirtual.edu.co");
 ?>
